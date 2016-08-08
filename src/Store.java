@@ -7,15 +7,24 @@ import java.util.Map;
  * Created by a539504 on 05/08/2016.
  */
 public class Store {
-    Map<String, StockItem> stockList = new HashMap<String, StockItem>();
+    private HashMap <String, StockItem> stockList;
+    private HashMap<String, StoreOffer> storeOffers;
 
     public Store() {
+        stockList = new HashMap<String, StockItem>();
+        storeOffers = new HashMap<String, StoreOffer>();
     }
 
-    public void addStockItem(String fruit, int value) {
+    public void addStockItem(String itemName, int value) {
 
-        StockItem item = StockItem.create(fruit, value);
-        stockList.put(fruit, item);
+        StockItem stockItem = StockItem.create(itemName, value);
+        stockList.put(itemName, stockItem);
+    }
+
+    public void addStoreOffer(String itemName, int item, int value) {
+
+        StoreOffer storeOffer = StoreOffer.create(item, value);
+        storeOffers.put(itemName, storeOffer);
     }
 
 
@@ -27,13 +36,18 @@ public class Store {
         return(item.getPrice());
     }
 
-    List<StockItem> buyItems(String[] itemNames) throws Exception {
+    public List<StockItem> buyItems(String[] itemNames) throws Exception {
         List<StockItem> items = new ArrayList<>();
         for (String itemName : itemNames) {
             StockItem item = stockList.get(itemName);
-            if (item == null)
+            if (item == null) {
                 throw new Exception(itemName + " not in stock");
-            items.add(item);
+            }
+
+            StoreOffer offer = storeOffers.get(itemName);
+            if ((offer == null) || (!offer.isItemFree())){
+                items.add(item);
+            }
         }
         return items;
     }

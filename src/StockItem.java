@@ -5,7 +5,7 @@ public class StockItem {
     private String itemName;
     private int price;
 
-    public int getPrice() {
+    protected int getPrice() {
         return price;
     }
 
@@ -25,6 +25,4 @@ public class StockItem {
     public static StockItem create(String fruit, int value) {
         return new StockItem(fruit, value);
     }
-
-
 }

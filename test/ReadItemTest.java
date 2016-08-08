@@ -54,10 +54,49 @@ public class ReadItemTest {
 
     @Test
     public void testCalculatePrice() throws Exception {
-        String[] shoppingList = {"Apple", "Orange", "Apple"};
+        String[] shoppingList = {"Apple", "Apple", "Orange", "Apple"};
         List<StockItem> items = store.buyItems(shoppingList);
 
         Integer totalPrice = store.checkoutItems(items);
-        assertEquals(145, totalPrice.intValue());
+        assertEquals(205, totalPrice.intValue());
+    }
+
+    @Test
+    public void testCalculatePriceWithOffer() throws Exception {
+        store.addStoreOffer("Apple", 2, 1);
+        store.addStoreOffer("Orange", 3, 2);
+
+        String[] shoppingList = {"Apple", "Orange", "Orange"};
+        List<StockItem> items = store.buyItems(shoppingList);
+
+        Integer totalPrice = store.checkoutItems(items);
+        assertEquals(110, totalPrice.intValue());
+    }
+
+    @Test
+    public void testCalculatePriceWithOfferOnOfferCount() throws Exception {
+        store.addStoreOffer("Apple", 2, 1);
+        store.addStoreOffer("Orange", 3, 2);
+
+        String[] shoppingList = {"Apple", "Apple", "Orange", "Orange", "Orange"};
+        List<StockItem> items = store.buyItems(shoppingList);
+
+        Integer totalPrice = store.checkoutItems(items);
+        // Extra items free
+        assertEquals(110, totalPrice.intValue());
+    }
+
+
+    @Test
+    public void testCalculatePriceWithOfferOverOfferAmount() throws Exception {
+        store.addStoreOffer("Apple", 2, 1);
+        store.addStoreOffer("Orange", 3, 2);
+
+        String[] shoppingList = {"Apple", "Apple", "Apple", "Orange", "Orange", "Orange", "Orange"};
+        List<StockItem> items = store.buyItems(shoppingList);
+
+        Integer totalPrice = store.checkoutItems(items);
+        // 1 item free
+        assertEquals(195, totalPrice.intValue());
     }
 }
